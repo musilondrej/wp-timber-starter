@@ -127,7 +127,7 @@ Per site, outside the theme:
 
 ## Requirements
 
-PHP 8.2+, WordPress 7.0+, Composer 2.9+, Node 20.17+ with npm 11.10+.
+PHP 8.2+, WordPress 7.0+, Composer 2.9+, Node 22+ with npm 11.10+.
 
 ## License
 
