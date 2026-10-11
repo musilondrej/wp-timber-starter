@@ -8,14 +8,20 @@
  *   php bin/setup --name="Acme" --css=tailwind
  *
  * Installs a CSS preset from stubs/css/, renames the theme (name, packages, text
- * domain, ability and PHP namespace), then deletes bin/ and stubs/. Don't run it in the
- * WP Timber Starter repository itself.
+ * domain, ability and PHP namespace), then deletes bin/ and stubs/. It refuses to run in
+ * the WP Timber Starter repository itself.
  */
 
 $root = dirname(__DIR__);
 
-if (is_dir("$root/.git")) {
-    fwrite(STDERR, "This looks like the WP Timber Starter repository itself (.git exists). Setup deletes bin/ and stubs/,\nso run it in a fresh copy: remove .git first, or use composer create-project.\n");
+// Setup deletes bin/ and stubs/, so it must not run in the starter's own repository.
+// A repository created with "Use this template" has its own origin and is fine.
+$origin = is_dir("$root/.git")
+    ? trim((string) shell_exec('git -C ' . escapeshellarg($root) . ' remote get-url origin 2>&1'))
+    : '';
+
+if (str_contains($origin, 'musilondrej/wp-timber-starter')) {
+    fwrite(STDERR, "This is the WP Timber Starter repository itself. Run setup in your own copy:\n\"Use this template\" on GitHub, composer create-project, or a clone without .git.\n");
     exit(1);
 }
 

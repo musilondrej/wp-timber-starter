@@ -24,7 +24,7 @@ Setup asks for a theme name and a CSS preset, renames the theme, text domain and
   ✓ Acme (acme) with tailwind
 ```
 
-From git instead: clone, `rm -rf .git`, then `php bin/setup` (or `php bin/setup --name="Acme" --css=tailwind`) and `composer install && npm install`.
+From GitHub instead: click **Use this template**, clone your new repository and run `composer install`, `php bin/setup` (or `php bin/setup --name="Acme" --css=tailwind`) and `npm install`.
 
 | Preset | What you get | `dist/app.css` |
 | --- | --- | --- |
