@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "wordpress": {
+      "command": "wp",
+      "args": [
+        "--path=${WP_PATH}",
+        "mcp-adapter",
+        "serve",
+        "--server=mcp-adapter-default-server",
+        "--user=${WP_MCP_USER:-admin}"
+      ]
+    }
+  }
+}

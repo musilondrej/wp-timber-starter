@@ -1,0 +1,4 @@
+@import "bootstrap/dist/css/bootstrap.css";
+@import "./base.css";
+
+/* Bootstrap JS components (dropdown, collapse, …): `npm i @popperjs/core` and import them in assets/js/app.js. */

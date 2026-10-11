@@ -1,0 +1,82 @@
+{
+    "name": "musilondrej/wp-timber-starter",
+    "description": "Timber 2 starter theme for WordPress. Pick Tailwind, Bootstrap, Pico or plain CSS on install.",
+    "type": "wordpress-theme",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ondřej Musil"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "timber/timber": "^2.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "WpTimberStarter\\": "src/"
+        }
+    },
+    "scripts": {
+        "post-create-project-cmd": [
+            "@php bin/setup"
+        ],
+        "post-install-cmd": "@php -r \"if (is_dir('.git')) { passthru('git config core.hooksPath .githooks'); }\"",
+        "format": [
+            "php-cs-fixer fix --show-progress=none",
+            "twig-cs-fixer fix views"
+        ],
+        "lint": [
+            "php-cs-fixer check --show-progress=none",
+            "@analyse",
+            "@lint:twig",
+            "@lint:files"
+        ],
+        "analyse": "phpstan analyse --memory-limit=1G --no-progress",
+        "lint:twig": [
+            "twig-cs-fixer lint views",
+            "@php scripts/twig-lint.php"
+        ],
+        "lint:files": "@php scripts/lint-files.php",
+        "i18n": [
+            "wp i18n make-pot . languages/theme.pot --exclude=vendor,node_modules,dist,build,stubs,bin,scripts --skip-js",
+            "wp i18n update-po languages/theme.pot languages",
+            "wp i18n make-mo languages",
+            "wp i18n make-php languages"
+        ]
+    },
+    "config": {
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        },
+        "audit": {
+            "abandoned": "fail",
+            "block-insecure": true,
+            "block-abandoned": true
+        },
+        "optimize-autoloader": true,
+        "secure-http": true,
+        "sort-packages": true,
+        "platform": {
+            "php": "8.2.0"
+        }
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.95",
+        "php-stubs/acf-pro-stubs": "^6.8",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan": "^2.2",
+        "szepeviktor/phpstan-wordpress": "^2.0",
+        "timber/wp-i18n-twig": "^1.1",
+        "vincentlanglet/twig-cs-fixer": "^4.1"
+    },
+    "scripts-descriptions": {
+        "post-install-cmd": "Turn on the pre-commit hook in .githooks/",
+        "format": "Fix PHP (PHP-CS-Fixer) and Twig (twig-cs-fixer) code style",
+        "lint": "Code style, static analysis, Twig and file checks (CI runs this)",
+        "analyse": "PHPStan static analysis",
+        "lint:twig": "Twig code style and syntax",
+        "lint:files": ".editorconfig rules in every text file, ABSPATH guards in template files",
+        "i18n": "Extract strings from PHP and Twig into languages/theme.pot, update the .po files and compile them"
+    }
+}

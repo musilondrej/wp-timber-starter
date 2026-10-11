@@ -1,0 +1,11 @@
+<header class="site-header">
+    <a href="{{ site.url }}" rel="home">{{ site.name|wp_kses_post }}</a>
+    {% if primary_menu %}
+        <nav aria-label="{{ __('Primary menu', 'wp-timber-starter') }}">
+            <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-menu" hidden>{{ __('Menu', 'wp-timber-starter') }}</button>
+            <div id="primary-menu">
+                {{ include('partials/menu.twig', {items: primary_menu.items}) }}
+            </div>
+        </nav>
+    {% endif %}
+</header>

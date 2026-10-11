@@ -1,0 +1,4 @@
+#!/bin/sh
+# Turned on by `composer install` (git config core.hooksPath .githooks).
+# Skip once with `git commit --no-verify`.
+exec composer lint

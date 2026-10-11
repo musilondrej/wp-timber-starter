@@ -1,0 +1,7 @@
+{% extends 'layouts/base.twig' %}
+
+{% block content %}
+    <h1>{{ __('Page not found', 'wp-timber-starter') }}</h1>
+    <p>{{ __('The page you are looking for does not exist.', 'wp-timber-starter') }}</p>
+    {{ function('get_search_form') }}
+{% endblock %}

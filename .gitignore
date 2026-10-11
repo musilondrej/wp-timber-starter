@@ -1,0 +1,7 @@
+/vendor/
+/node_modules/
+/dist/
+/build/
+.DS_Store
+.twig-cs-fixer.cache
+.php-cs-fixer.cache

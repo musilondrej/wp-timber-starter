@@ -1,0 +1,8 @@
+{% extends 'layouts/base.twig' %}
+
+{% block content %}
+    <article class="{{ post.class }}">
+        <h1>{{ post.title|wp_kses_post }}</h1>
+        {{ post.content|raw }}
+    </article>
+{% endblock %}

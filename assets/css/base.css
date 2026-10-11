@@ -1,0 +1,50 @@
+/* Imported by every CSS preset: what WordPress markup and accessibility need regardless of framework. */
+
+.screen-reader-text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  border: 0;
+  word-wrap: normal !important;
+}
+
+.screen-reader-text:focus {
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 100000;
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0.75rem 1rem;
+  clip-path: none;
+  color: CanvasText;
+  background: Canvas;
+}
+
+.alignleft { float: left; margin: 0 1.5em 1em 0; }
+.alignright { float: right; margin: 0 0 1em 1.5em; }
+.aligncenter { display: block; margin-inline: auto; }
+
+:where(:focus-visible) { outline: 2px solid currentColor; outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* app.js unhides the toggle, so without JavaScript the menu simply stays open. */
+@media (width < 48em) {
+  .menu-toggle[aria-expanded="false"] + * { display: none; }
+}
+
+@media (width >= 48em) {
+  .menu-toggle { display: none; }
+}

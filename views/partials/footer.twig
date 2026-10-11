@@ -1,0 +1,8 @@
+<footer class="site-footer">
+    {% if footer_menu %}
+        <nav aria-label="{{ __('Footer menu', 'wp-timber-starter') }}">
+            {{ include('partials/menu.twig', {items: footer_menu.items}) }}
+        </nav>
+    {% endif %}
+    <p>&copy; {{ 'now'|date('Y') }} {{ site.name|wp_kses_post }}</p>
+</footer>

@@ -1,0 +1,101 @@
+# Copyright (C) 2026 
+# This file is distributed under the MIT.
+msgid ""
+msgstr ""
+"Project-Id-Version: WP Timber Starter 0.1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/theme/timberkit\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-11T22:43:19+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: wp-timber-starter\n"
+
+#. Theme Name of the theme
+#: style.css:2
+msgid "WP Timber Starter"
+msgstr ""
+
+#. Description of the theme
+#: style.css:3
+msgid "Built on WP Timber Starter."
+msgstr ""
+
+#. translators: %s: search query
+#: index.php:11
+#, php-format
+msgid "Search results for \"%s\""
+msgstr ""
+
+#: src/Abilities.php:26
+msgid "Theme introspection"
+msgstr ""
+
+#: src/Abilities.php:27
+msgid "Read-only information about how this theme and site are built, for AI agents."
+msgstr ""
+
+#: src/Abilities.php:37
+msgid "Site context"
+msgstr ""
+
+#: src/Abilities.php:43
+msgid "Content model"
+msgstr ""
+
+#: src/Abilities.php:49
+msgid "Template map"
+msgstr ""
+
+#: src/Security.php:119
+msgid "Incorrect username or password."
+msgstr ""
+
+#: src/Theme.php:50
+#: views/partials/header.twig:4
+msgid "Primary menu"
+msgstr ""
+
+#: src/Theme.php:51
+#: views/partials/footer.twig:3
+msgid "Footer menu"
+msgstr ""
+
+#: src/Theme.php:163
+msgid "Theme settings"
+msgstr ""
+
+#: views/layouts/base.twig:10
+msgid "Skip to content"
+msgstr ""
+
+#: views/partials/header.twig:5
+msgid "Menu"
+msgstr ""
+
+#: views/partials/pagination.twig:3
+msgid "Pagination"
+msgstr ""
+
+#: views/partials/pagination.twig:5
+msgid "Previous"
+msgstr ""
+
+#: views/partials/pagination.twig:15
+msgid "Next"
+msgstr ""
+
+#: views/templates/404.twig:4
+msgid "Page not found"
+msgstr ""
+
+#: views/templates/404.twig:5
+msgid "The page you are looking for does not exist."
+msgstr ""
+
+#: views/templates/index.twig:11
+msgid "Nothing found."
+msgstr ""

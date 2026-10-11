@@ -1,0 +1,23 @@
+{
+  "name": "wp-timber-starter",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "dev": "concurrently -k -n js,css \"npm:js:watch\" \"npm:css:watch\"",
+    "build": "npm run js:build && npm run css:build",
+    "build:zip": "npm run build && bash scripts/build-zip.sh",
+    "js:build": "esbuild assets/js/app.js --bundle --minify --outdir=dist",
+    "js:watch": "esbuild assets/js/app.js --bundle --sourcemap --outdir=dist --watch=forever",
+    "css:build": "esbuild assets/css/app.css --bundle --minify --outdir=dist --loader:.woff2=file --loader:.svg=file",
+    "css:watch": "esbuild assets/css/app.css --bundle --sourcemap --outdir=dist --loader:.woff2=file --loader:.svg=file --watch=forever"
+  },
+  "devDependencies": {
+    "concurrently": "9.2.4",
+    "esbuild": "0.25.12"
+  },
+  "engines": {
+    "node": ">=20.17.0",
+    "npm": ">=11.10.0"
+  }
+}

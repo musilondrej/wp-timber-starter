@@ -1,0 +1,5 @@
+@import "tailwindcss";
+@import "./base.css";
+@plugin "@tailwindcss/typography";
+
+/* Tailwind v4 scans the theme automatically (views/, src/, assets/). Add more with @source "…"; */

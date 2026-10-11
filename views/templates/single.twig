@@ -1,0 +1,16 @@
+{% extends 'layouts/base.twig' %}
+
+{% block content %}
+    <article class="{{ post.class }}">
+        <header>
+            <h1>{{ post.title|wp_kses_post }}</h1>
+            <time datetime="{{ post.date('c') }}">{{ post.date }}</time>
+        </header>
+
+        {% if post.thumbnail %}
+            {{ function('wp_get_attachment_image', post.thumbnail.id, 'large', false, {fetchpriority: 'high', loading: false})|raw }}
+        {% endif %}
+
+        {{ post.content|raw }}
+    </article>
+{% endblock %}

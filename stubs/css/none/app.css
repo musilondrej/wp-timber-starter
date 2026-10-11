@@ -1,0 +1,30 @@
+@import "./base.css";
+
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, sans-serif;
+  line-height: 1.6;
+  --text: light-dark(#18181b, #e4e4e7);
+  --muted: light-dark(#52525b, #a1a1aa);
+  --bg: light-dark(#ffffff, #09090b);
+  --accent: light-dark(#2563eb, #60a5fa);
+}
+
+body {
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  max-width: 70ch;
+  color: var(--text);
+  background: var(--bg);
+}
+
+a { color: var(--accent); }
+img, video { max-width: 100%; height: auto; }
+time { color: var(--muted); font-size: 0.875em; }
+
+.site-header, .site-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; }
+.site-header ul, .site-footer ul { display: flex; gap: 1rem; margin: 0; padding: 0; list-style: none; }
+.site-footer { margin-top: 4rem; color: var(--muted); }
+.pagination { display: flex; gap: 0.75rem; margin-top: 2rem; }

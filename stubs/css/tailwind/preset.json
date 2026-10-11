@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "css:build": "tailwindcss -i assets/css/app.css -o dist/app.css --minify",
+    "css:watch": "tailwindcss -i assets/css/app.css -o dist/app.css --watch"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "4.3.3",
+    "@tailwindcss/typography": "0.5.20",
+    "tailwindcss": "4.3.3"
+  }
+}

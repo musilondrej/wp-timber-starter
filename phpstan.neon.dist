@@ -1,0 +1,15 @@
+# WordPress stubs come from szepeviktor/phpstan-wordpress, loaded by phpstan/extension-installer.
+parameters:
+    level: 8
+    paths:
+        - functions.php
+        - index.php
+        - page.php
+        - single.php
+        - 404.php
+        - src/
+        - scripts/
+    scanFiles:
+        # ACF isn't a Composer dependency; its stubs make get_field() & co. known to PHPStan.
+        - vendor/php-stubs/acf-pro-stubs/acf-pro-stubs.php
+    treatPhpDocTypesAsCertain: false

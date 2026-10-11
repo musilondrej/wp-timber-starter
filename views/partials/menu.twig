@@ -1,0 +1,10 @@
+<ul>
+    {% for item in items %}
+        <li class="{{ item.classes|join(' ') }}">
+            <a href="{{ item.link }}"{% if item.current %} aria-current="page"{% endif %}>{{ item.title|wp_kses_post }}</a>
+            {% if item.children %}
+                {{ include('partials/menu.twig', {items: item.children}) }}
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>

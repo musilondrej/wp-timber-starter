@@ -1,0 +1,248 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * One-time setup for a theme based on WP Timber Starter; `composer create-project` runs it.
+ *
+ *   php bin/setup                                  interactive
+ *   php bin/setup --name="Acme" --css=tailwind
+ *
+ * Installs a CSS preset from stubs/css/, renames the theme (name, packages, text
+ * domain, ability and PHP namespace), then deletes bin/ and stubs/. Don't run it in the
+ * WP Timber Starter repository itself.
+ */
+
+$root = dirname(__DIR__);
+
+if (is_dir("$root/.git")) {
+    fwrite(STDERR, "This looks like the WP Timber Starter repository itself (.git exists). Setup deletes bin/ and stubs/,\nso run it in a fresh copy: remove .git first, or use composer create-project.\n");
+    exit(1);
+}
+
+$presets = array_map('basename', glob("$root/stubs/css/*", GLOB_ONLYDIR));
+sort($presets);
+
+if ($presets === []) {
+    fwrite(STDERR, "No presets in stubs/css. Setup has already run.\n");
+    exit(1);
+}
+
+$options = getopt('', ['name:', 'css:']);
+$interactive = stream_isatty(STDIN) && !isset($options['name'], $options['css']);
+
+$name = $options['name'] ?? ($interactive ? ask('Theme name', 'WP Timber Starter') : 'WP Timber Starter');
+$css = $options['css'] ?? ($interactive ? choose('CSS framework', $presets, 'none') : 'none');
+
+if (!in_array($css, $presets, true)) {
+    fwrite(STDERR, "Unknown preset \"$css\". Available: " . implode(', ', $presets) . "\n");
+    exit(1);
+}
+
+$slug = slugify($name);
+$namespace = studly($slug);
+
+// 1. CSS preset.
+
+copy("$root/stubs/css/$css/app.css", "$root/assets/css/app.css");
+
+$preset = read_json("$root/stubs/css/$css/preset.json");
+$package = read_json("$root/package.json");
+$package['name'] = $slug;
+$package['scripts'] = array_merge($package['scripts'], $preset['scripts'] ?? []);
+$package['devDependencies'] = array_merge($package['devDependencies'], $preset['devDependencies'] ?? []);
+ksort($package['devDependencies']);
+write_json("$root/package.json", $package);
+
+// The preset changed package.json; `npm install` writes a matching lockfile.
+if ($preset !== [] && file_exists("$root/package-lock.json")) {
+    unlink("$root/package-lock.json");
+}
+
+// 2. Rename.
+
+$composer = read_json("$root/composer.json");
+$composer['name'] = "$slug/theme";
+$composer['description'] = "$name WordPress theme";
+$composer['autoload']['psr-4'] = ["$namespace\\" => 'src/'];
+unset($composer['scripts']['post-create-project-cmd']); // It runs this script, which is about to be deleted.
+write_json("$root/composer.json", $composer);
+
+if (file_exists("$root/composer.lock")) {
+    // composer.lock stores a hash of composer.json, so refresh it. No versions change.
+    passthru('composer update --lock --no-interaction --quiet --working-dir=' . escapeshellarg($root));
+}
+
+replace_in("$root/style.css", [
+    'Theme Name: WP Timber Starter' => "Theme Name: $name",
+    'Text Domain: wp-timber-starter' => "Text Domain: $slug",
+]);
+
+// Text domain ('wp-timber-starter'), ability namespace (wp-timber-starter/…) and PHP namespace (WpTimberStarter\),
+// in code and in the agent docs.
+$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root, FilesystemIterator::SKIP_DOTS));
+foreach ($files as $file) {
+    $relative_path = substr($file->getPathname(), strlen($root));
+
+    $is_skipped_dir = preg_match('#^/(vendor|node_modules|\.git|stubs|bin)/#', $relative_path);
+    $is_code_or_docs = preg_match('/\.(php|twig|md)$/', $relative_path);
+    $is_readme = $relative_path === '/README.md';
+
+    if ($is_skipped_dir || !$is_code_or_docs || $is_readme) {
+        continue;
+    }
+
+    replace_in($file->getPathname(), [
+        "'wp-timber-starter'" => "'$slug'",
+        '`wp-timber-starter`' => "`$slug`",
+        'wp-timber-starter/' => "$slug/",
+        'WpTimberStarter\\' => "$namespace\\",
+        'namespace WpTimberStarter;' => "namespace $namespace;",
+    ]);
+}
+
+// New namespace: refresh the autoloader and re-sort the use statements.
+if (is_dir("$root/vendor")) {
+    passthru('composer dump-autoload --no-interaction --quiet --working-dir=' . escapeshellarg($root));
+    passthru('composer format --no-interaction --quiet --working-dir=' . escapeshellarg($root));
+}
+
+// 3. Clean up.
+
+remove_dir("$root/stubs");
+remove_dir("$root/bin");
+
+$css_label = $css === 'none' ? 'plain CSS' : $css;
+
+echo "\n  ✓ $name ($slug) with $css_label\n\n";
+echo "  Next:\n";
+echo "    composer install   # if you cloned instead of using create-project\n";
+echo "    npm install\n";
+echo "    npm run dev        # or: npm run build\n\n";
+
+// Helpers
+
+function ask(string $question, string $default): string
+{
+    $answer = trim((string) readline("  $question [$default]: "));
+
+    return $answer === '' ? $default : $answer;
+}
+
+/**
+ * Accepts the option's number or its name. Empty input picks the default.
+ *
+ * @param list<string> $options
+ */
+function choose(string $question, array $options, string $default): string
+{
+    echo "  $question:\n";
+    foreach ($options as $index => $option) {
+        $number = $index + 1;
+        $suffix = $option === $default ? ' (default)' : '';
+        echo "    [$number] $option$suffix\n";
+    }
+
+    $answer = trim((string) readline('  > '));
+
+    if ($answer === '') {
+        return $default;
+    }
+
+    if (ctype_digit($answer) && isset($options[(int) $answer - 1])) {
+        return $options[(int) $answer - 1];
+    }
+
+    if (in_array($answer, $options, true)) {
+        return $answer;
+    }
+
+    echo "  Unknown choice \"$answer\", using $default.\n";
+
+    return $default;
+}
+
+/**
+ * "Žluťoučký kůň" → "zlutoucky-kun".
+ */
+function slugify(string $text): string
+{
+    // Not iconv: its transliteration differs per platform (macOS turns "Žluťoučký" into "Zlutocuk?").
+    if (function_exists('transliterator_transliterate')) {
+        $ascii = transliterator_transliterate('Any-Latin; Latin-ASCII', $text);
+    } else {
+        $ascii = strtr($text, [
+            'á' => 'a', 'ä' => 'a', 'č' => 'c', 'ď' => 'd', 'é' => 'e', 'ě' => 'e', 'ë' => 'e', 'í' => 'i',
+            'ľ' => 'l', 'ĺ' => 'l', 'ň' => 'n', 'ó' => 'o', 'ö' => 'o', 'ô' => 'o', 'ř' => 'r', 'ŕ' => 'r',
+            'š' => 's', 'ß' => 'ss', 'ť' => 't', 'ú' => 'u', 'ů' => 'u', 'ü' => 'u', 'ý' => 'y', 'ž' => 'z',
+            'Á' => 'A', 'Ä' => 'A', 'Č' => 'C', 'Ď' => 'D', 'É' => 'E', 'Ě' => 'E', 'Í' => 'I', 'Ľ' => 'L',
+            'Ň' => 'N', 'Ó' => 'O', 'Ö' => 'O', 'Ř' => 'R', 'Š' => 'S', 'Ť' => 'T', 'Ú' => 'U', 'Ů' => 'U',
+            'Ü' => 'U', 'Ý' => 'Y', 'Ž' => 'Z',
+        ]);
+    }
+
+    $slug = trim(preg_replace('/[^a-z0-9]+/', '-', strtolower($ascii)), '-');
+
+    return $slug === '' ? 'theme' : $slug;
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function read_json(string $path): array
+{
+    return json_decode(file_get_contents($path), true) ?: [];
+}
+
+/**
+ * @param array<string, mixed> $data
+ */
+function write_json(string $path, array $data): void
+{
+    $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    file_put_contents($path, $json . "\n");
+}
+
+/**
+ * @param array<string, string> $replacements search => replace
+ */
+function replace_in(string $path, array $replacements): void
+{
+    $content = file_get_contents($path);
+    $updated = strtr($content, $replacements);
+
+    if ($updated !== $content) {
+        file_put_contents($path, $updated);
+    }
+}
+
+function remove_dir(string $dir): void
+{
+    if (!is_dir($dir)) {
+        return;
+    }
+
+    $items = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS),
+        RecursiveIteratorIterator::CHILD_FIRST,
+    );
+
+    foreach ($items as $item) {
+        if ($item->isDir()) {
+            rmdir($item->getPathname());
+        } else {
+            unlink($item->getPathname());
+        }
+    }
+
+    rmdir($dir);
+}
+
+/**
+ * "zlutoucky-kun" → "ZlutouckyKun". PHP names can't start with a digit.
+ */
+function studly(string $slug): string
+{
+    $studly = str_replace(' ', '', ucwords(str_replace('-', ' ', $slug)));
+
+    return ctype_digit($studly[0]) ? "Theme$studly" : $studly;
+}

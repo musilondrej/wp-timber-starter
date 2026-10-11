@@ -1,0 +1,4 @@
+@import "@picocss/pico/css/pico.min.css";
+@import "./base.css";
+
+/* Pico is classless: the theme's semantic HTML is styled as-is. Wrap layout in <main class="container"> if you want a centred width. */

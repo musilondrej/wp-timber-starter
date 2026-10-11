@@ -1,0 +1,5 @@
+<article class="tease">
+    <h2><a href="{{ post.link }}">{{ post.title|wp_kses_post }}</a></h2>
+    <time datetime="{{ post.date('c') }}">{{ post.date }}</time>
+    {{ post.excerpt({words: 30, read_more: false})|raw }}
+</article>

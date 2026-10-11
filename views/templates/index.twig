@@ -1,0 +1,16 @@
+{% extends 'layouts/base.twig' %}
+
+{% block content %}
+    {% if title %}
+        <h1>{{ title|wp_kses_post }}</h1>
+    {% endif %}
+
+    {% for post in posts %}
+        {{ include('partials/tease.twig', {post: post}) }}
+    {% else %}
+        <p>{{ __('Nothing found.', 'wp-timber-starter') }}</p>
+        {{ function('get_search_form') }}
+    {% endfor %}
+
+    {{ include('partials/pagination.twig', {pagination: posts.pagination({mid_size: 2})}) }}
+{% endblock %}
