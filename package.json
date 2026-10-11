@@ -13,11 +13,14 @@
     "css:watch": "esbuild assets/css/app.css --bundle --sourcemap --outdir=dist --loader:.woff2=file --loader:.svg=file --watch=forever"
   },
   "devDependencies": {
-    "concurrently": "9.2.4",
+    "concurrently": "10.0.5",
     "esbuild": "0.28.2"
   },
   "engines": {
-    "node": ">=20.17.0",
+    "node": ">=22",
     "npm": ">=11.10.0"
+  },
+  "overrides": {
+    "shell-quote": "1.12.0"
   }
 }
