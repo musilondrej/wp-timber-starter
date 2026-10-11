@@ -132,6 +132,16 @@ final readonly class ContactDetails
 - Registered in the constructor. Callbacks are public typed methods (`[$this, 'method']`) or core helpers (`'__return_false'`). No closures: `remove_action()` can't remove them.
 - Named after what they do (`enqueue_assets`), not the hook.
 
+## Git
+
+Trunk-based: `main` is always releasable and only changes through pull requests.
+
+- One change per short-lived branch off the latest `main`: `feat/…`, `fix/…`, `docs/…`, `chore/…`. Merge it within a day or two.
+- Keep the branch current by rebasing, never by merging `main` into it: `git fetch && git rebase origin/main`, then `git push --force-with-lease`.
+- The pull request title becomes the commit message on `main` (squash merge): imperative, under 72 characters, e.g. `Add project post type`. The description becomes its body.
+- CI must pass; the branch is deleted after the merge. Never push or force-push to `main`.
+- Commit, push and open pull requests only when the user asks.
+
 ## Dependencies
 
 - Ask before adding a Composer or npm package.

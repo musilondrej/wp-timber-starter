@@ -46,7 +46,7 @@ Every preset imports `assets/css/base.css`: the classes WordPress outputs (`.scr
 | `composer format` | Fix PHP and Twig code style |
 | `composer i18n` | Extract strings from PHP and Twig into `languages/theme.pot`, update the `.po` files, compile `.mo` and `.l10n.php` |
 
-Locally, [Query Monitor](https://wordpress.org/plugins/query-monitor/) shows duplicate and slow queries per page; check new templates with it. `composer install` turns on a pre-commit hook (`.githooks/`) that runs `composer lint`. CI runs lint, `composer audit` and the asset build on PHP 8.2 and 8.4. Pushing a `v*` tag builds the production zip and attaches it to a GitHub release. Actions are pinned to commit SHAs; Dependabot sends weekly grouped updates with a 7-day cooldown.
+Locally, [Query Monitor](https://wordpress.org/plugins/query-monitor/) shows duplicate and slow queries per page; check new templates with it. Changes reach `main` only through pull requests: short-lived branches, rebased on `main`, squash-merged once CI passes (see Git in `AGENTS.md`). `composer install` turns on a pre-commit hook (`.githooks/`) that runs `composer lint`. CI runs lint, `composer audit` and the asset build on PHP 8.2 and 8.4. Pushing a `v*` tag builds the production zip and attaches it to a GitHub release. Actions are pinned to commit SHAs; Dependabot sends weekly grouped updates with a 7-day cooldown.
 
 ## Structure
 
